@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using Ardalis.Result;
+using MediatR;
 
 namespace ProjectManager.Modules.Projects.Contracts.Requests;
 
-public class CreateProjectRequest : IRequest<int>
+public record CreateProjectRequest : IRequest<Result<int>>
 {
     public string Name { get; set; }
     public string Description { get; set; }

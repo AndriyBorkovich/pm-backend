@@ -77,7 +77,7 @@ public class LoginCommandHandler(UserManager<User> userManager, JwtHandler jwtHa
         // Check password validity
         if (!await userManager.CheckPasswordAsync(user, request.Password))
         {
-            return Result.Unauthorized("Invalid credentials.");
+            return Result.Forbidden("Invalid credentials.");
         }
 
         // Generate JWT token

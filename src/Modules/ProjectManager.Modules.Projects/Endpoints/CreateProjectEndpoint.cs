@@ -1,4 +1,6 @@
-﻿using FastEndpoints;
+﻿using Ardalis.Result;
+using FastEndpoints;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
@@ -6,20 +8,30 @@ using ProjectManager.Modules.Projects.Contracts.Requests;
 
 namespace ProjectManager.Modules.Projects.Endpoints;
 
-public class CreateProjectEndpoint(IMediator mediator) : Endpoint<CreateProjectRequest, int>
+public class CreateProjectValidator : AbstractValidator<CreateProjectRequest>
+{
+    public CreateProjectValidator()
+    {
+        RuleFor(x => x.Name).NotEmpty().MaximumLength(50);
+        RuleFor(x => x.Description).MaximumLength(100);
+        RuleFor(x => x.StartDate)
+            .LessThanOrEqualTo(x => x.EndDate);
+    }
+}
+
+public class CreateProjectEndpoint(IMediator mediator) : Endpoint<CreateProjectRequest, Result<int>>
 {
     public override void Configure()
     {
         Post("/projects/create");
-        Description(b => b.Accepts<CreateProjectRequest>()
-                          .Produces<int>(StatusCodes.Status200OK));
         AuthSchemes(JwtBearerDefaults.AuthenticationScheme);
+        Validator<CreateProjectValidator>();
     }
 
     public override async Task HandleAsync(CreateProjectRequest req, CancellationToken ct)
     {
-        var projectId = await mediator.Send(req, ct);
+        var result = await mediator.Send(req, ct);
 
-        await SendOkAsync(projectId, cancellation: ct);
+        await SendOkAsync(result.Value, cancellation: ct);
     }
 }

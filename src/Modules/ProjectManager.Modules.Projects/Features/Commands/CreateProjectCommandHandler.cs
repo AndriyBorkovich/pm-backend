@@ -1,13 +1,14 @@
-﻿using MediatR;
+﻿using Ardalis.Result;
+using MediatR;
 using ProjectManager.Core.Entities;
 using ProjectManager.Modules.Projects.Contracts.Requests;
 using ProjectManager.Persistence.Context;
 
 namespace ProjectManager.Modules.Projects.Features.Commands;
 
-public class CreateProjectCommand(ProjectDbContext dbContext) : IRequestHandler<CreateProjectRequest, int>
+public class CreateProjectCommandHandler(ProjectDbContext dbContext) : IRequestHandler<CreateProjectRequest, Result<int>>
 {
-    public async Task<int> Handle(CreateProjectRequest request, CancellationToken cancellationToken)
+    public async Task<Result<int>> Handle(CreateProjectRequest request, CancellationToken cancellationToken)
     {
         var newProject = new Project
         {
@@ -20,6 +21,6 @@ public class CreateProjectCommand(ProjectDbContext dbContext) : IRequestHandler<
         dbContext.Projects.Add(newProject);
         await dbContext.SaveChangesAsync(cancellationToken);
 
-        return newProject.Id;
+        return Result.Success(newProject.Id);
     }
 }

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\ProjectManager.Core\ProjectManager.Core.csproj" />
     <ProjectReference Include="..\..\Shared\ProjectManager.Persistence\ProjectManager.Persistence.csproj" />
   </ItemGroup>
 
