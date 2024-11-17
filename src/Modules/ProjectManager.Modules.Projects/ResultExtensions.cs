@@ -4,7 +4,7 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using IResult = Ardalis.Result.IResult;
 
-namespace ProjectManager.Modules.Administration;
+namespace ProjectManager.Modules.Projects;
 
 public static class ArdalisResultsExtensions
 {
