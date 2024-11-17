@@ -20,6 +20,6 @@ public class CreateProjectEndpoint(IMediator mediator) : Endpoint<CreateProjectR
     {
         var projectId = await mediator.Send(req, ct);
 
-        await SendOkAsync(projectId, ct);
+        await SendOkAsync(projectId, cancellation: ct);
     }
 }

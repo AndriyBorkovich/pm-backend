@@ -13,7 +13,8 @@ public class CreateProjectCommand(ProjectDbContext dbContext) : IRequestHandler<
         {
             Name = request.Name,
             Description = request.Description,
-            StartDate = request.StartDate
+            StartDate = request.StartDate,
+            EndDate = request.EndDate
         };
 
         dbContext.Projects.Add(newProject);

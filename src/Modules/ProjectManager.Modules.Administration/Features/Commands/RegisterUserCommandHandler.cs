@@ -1,7 +1,6 @@
 ﻿using Ardalis.Result;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
-using ProjectManager.Core.Constants;
 using ProjectManager.Core.Entities;
 using ProjectManager.Core.Enums;
 using ProjectManager.Modules.Administration.Contracts.Requests;

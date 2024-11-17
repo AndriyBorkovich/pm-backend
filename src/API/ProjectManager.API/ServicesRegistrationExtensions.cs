@@ -1,13 +1,15 @@
-﻿using FastEndpoints;
+﻿using Ardalis.Result;
+using FastEndpoints;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ProjectManager.API;
 
-public static class ServiceCollectionExtensions
+public static class ServicesRegistrationExtensions
 {
     public static void AddSwagger(this IServiceCollection services)
     {
@@ -84,5 +86,29 @@ public static class ServiceCollectionExtensions
 
             o.SourceGeneratorDiscoveredTypes.AddRange(allDiscoveredTypes);
         });
+    }
+
+    public static void UseFastEndpointsWithResult(this IApplicationBuilder app)
+    {
+        app.UseFastEndpoints(
+           c =>
+           {
+               c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
+               c.Errors.UseProblemDetails();
+               c.Endpoints.Configurator =
+                   ep =>
+                   {
+                       if (ep.ResDtoType?.IsGenericType == true && ep.ResDtoType.GetGenericTypeDefinition() == typeof(Result<>))
+                       {
+                           ep.Description(desc =>
+                           {
+                               var successType = ep.ResDtoType.GetGenericArguments()[0];
+                               desc.ClearDefaultProduces()
+                                   .Produces(200, successType)
+                                   .ProducesProblemDetails();
+                           });
+                       }
+                   };
+           });
     }
 }
