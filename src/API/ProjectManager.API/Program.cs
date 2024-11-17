@@ -14,7 +14,7 @@ builder.Services.AddSerilog((_, lc) => lc.ReadFrom.Configuration(builder.Configu
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwagger();
+//builder.Services.AddSwagger();
 
 builder.Services.AddProblemDetails(options =>
     options.CustomizeProblemDetails = ctx =>
@@ -46,9 +46,6 @@ builder.Services.AddTasksModule();
 builder.Services.AddFastEndpointsFromModules();
 
 var app = builder.Build();
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.UseExceptionHandler();
 

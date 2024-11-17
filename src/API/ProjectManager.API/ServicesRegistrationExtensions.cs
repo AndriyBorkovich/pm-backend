@@ -1,10 +1,14 @@
 ﻿using Ardalis.Result;
 using FastEndpoints;
+using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NJsonSchema.Generation.TypeMappers;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ProjectManager.API;
@@ -85,15 +89,29 @@ public static class ServicesRegistrationExtensions
             }
 
             o.SourceGeneratorDiscoveredTypes.AddRange(allDiscoveredTypes);
+        }).SwaggerDocument(o => o.DocumentSettings = s =>
+        {
+            s.Title = "Project management API";
+            s.Version = "v1";
+            s.SchemaSettings.TypeMappers.Add(
+            new PrimitiveTypeMapper(
+                typeof(int),
+                schema =>
+                {
+                    schema.Type = NJsonSchema.JsonObjectType.Number;
+                    schema.Format = "int";
+                }));
         });
     }
 
     public static void UseFastEndpointsWithResult(this IApplicationBuilder app)
     {
         app.UseFastEndpoints(
-           c =>
-           {
-               c.Serializer.Options.Converters.Add(new JsonStringEnumConverter());
+        c =>
+        {
+               c.Serializer.Options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+               c.Serializer.Options.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+               c.Serializer.Options.DictionaryKeyPolicy = JsonNamingPolicy.CamelCase;
                c.Errors.UseProblemDetails();
                c.Endpoints.Configurator =
                    ep =>
@@ -109,6 +127,6 @@ public static class ServicesRegistrationExtensions
                            });
                        }
                    };
-           });
+           }).UseSwaggerGen();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Ardalis.Result;
-using FastEndpoints;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using ProjectManager.Modules.Projects.Contracts.Responses;
@@ -17,12 +16,23 @@ namespace ProjectManager.Modules.Projects.Features.Queries
         public async Task<Result<ProjectResponse>> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
         {
             var project = await dbContext.Projects
-                .Select(p => new ProjectResponse(p.Id, p.Name, p.Description, p.StartDate, p.EndDate))
+                .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == request.Id, cancellationToken);
-            if (project is null)
-                return Result.NotFound($"Project with ID {request.Id} not found.");
 
-            return Result.Success(project);
+            if (project is null)
+            {
+                return Result.NotFound($"Project with ID {request.Id} not found.");
+            }
+
+            var response = new ProjectResponse(
+                project.Id,
+                project.Name,
+                project.Description,
+                project.StartDate,
+                project.EndDate
+            );
+
+            return Result.Success(response);
         }
     }
 }
