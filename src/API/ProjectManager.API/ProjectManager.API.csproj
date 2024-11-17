@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,7 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ErrorOr" Version="2.0.1" />
+    <PackageReference Include="FastEndpoints" Version="5.31.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Serilog" Version="4.1.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11" />
+	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Modules\ProjectManager.Modules.Administration\ProjectManager.Modules.Administration.csproj" />
+    <ProjectReference Include="..\..\Modules\ProjectManager.Modules.Projects\ProjectManager.Modules.Projects.csproj" />
+    <ProjectReference Include="..\..\Modules\ProjectManager.Modules.Tasks\ProjectManager.Modules.Tasks.csproj" />
+    <ProjectReference Include="..\..\Shared\ProjectManager.Core\ProjectManager.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\ProjectManager.Persistence\ProjectManager.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

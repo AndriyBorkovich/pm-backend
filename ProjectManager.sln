@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.11.35303.130
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager.API", "src\API\ProjectManager.API\ProjectManager.API.csproj", "{EA5A06E8-2890-4DC4-A424-D8848E2A1CB1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2BE74DB8-D18D-40CE-A5BA-23E58A593A75} = {2BE74DB8-D18D-40CE-A5BA-23E58A593A75}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager.Core", "src\Shared\ProjectManager.Core\ProjectManager.Core.csproj", "{BDF1ABB8-53A3-4F3C-868B-C82D24A4400A}"
 EndProject
@@ -23,7 +26,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager.Modules.Repo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager.Tasks.IntegrationTests", "tests\ProjectManager.Tasks.IntegrationTests\ProjectManager.Tasks.IntegrationTests.csproj", "{12602241-EE16-4661-A533-6AC3F96A5499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectManager.Modules.Administration", "src\Modules\ProjectManager.Modules.Administration\ProjectManager.Modules.Administration.csproj", "{2BE74DB8-D18D-40CE-A5BA-23E58A593A75}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProjectManager.Modules.Administration", "src\Modules\ProjectManager.Modules.Administration\ProjectManager.Modules.Administration.csproj", "{2BE74DB8-D18D-40CE-A5BA-23E58A593A75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
