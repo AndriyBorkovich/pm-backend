@@ -3,6 +3,7 @@ using FastEndpoints;
 using FluentValidation;
 using MediatR;
 using ProjectManager.Core.Constants;
+using ProjectManager.Core.Extensions;
 using ProjectManager.Modules.Administration.Contracts.Requests;
 using ProjectManager.Modules.Administration.Contracts.Responses;
 
