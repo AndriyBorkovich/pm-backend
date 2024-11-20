@@ -2,53 +2,43 @@
 using FastEndpoints;
 using FastEndpoints.Swagger;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using NJsonSchema.Generation.TypeMappers;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
+using ProjectManager.Core.Entities;
+using ProjectManager.Persistence.Context;
 
 namespace ProjectManager.API;
 
 public static class ServicesRegistrationExtensions
 {
-    public static void AddSwagger(this IServiceCollection services)
+    public static void AddExceptionHandling(this IServiceCollection services)
     {
-        services.AddSwaggerGen(opt =>
-        {
-            opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Project management API", Version = "v1" });
-            opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        services.AddProblemDetails(options =>
+            options.CustomizeProblemDetails = ctx =>
             {
-                In = ParameterLocation.Header,
-                Description = "Please enter token",
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                BearerFormat = "JWT",
-                Scheme = "bearer"
-            });
-
-            opt.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
-        });
+                ctx.ProblemDetails.Extensions.Add("trace-id", ctx.HttpContext.TraceIdentifier);
+                ctx.ProblemDetails.Extensions.Add("instance", $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
+            }
+        );
+        
+        services.AddExceptionHandler<ExceptionHandler>();
     }
-
     public static void AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddIdentity<User, IdentityRole<string>>(opt =>
+            {
+                opt.Password.RequiredLength = 8;
+                opt.User.RequireUniqueEmail = true;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.SignIn.RequireConfirmedEmail = true;
+            })
+            .AddEntityFrameworkStores<ProjectDbContext>();
+        
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {

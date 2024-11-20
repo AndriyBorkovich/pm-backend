@@ -1,11 +1,8 @@
-using Microsoft.AspNetCore.Identity;
 using ProjectManager.API;
-using ProjectManager.Core.Entities;
 using ProjectManager.Modules.Administration;
 using ProjectManager.Modules.Projects;
 using ProjectManager.Modules.Tasks;
 using ProjectManager.Persistence;
-using ProjectManager.Persistence.Context;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,24 +11,9 @@ builder.Services.AddSerilog((_, lc) => lc.ReadFrom.Configuration(builder.Configu
 
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddProblemDetails(options =>
-    options.CustomizeProblemDetails = ctx =>
-    {
-        ctx.ProblemDetails.Extensions.Add("trace-id", ctx.HttpContext.TraceIdentifier);
-        ctx.ProblemDetails.Extensions.Add("instance", $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
-    }
-);
-builder.Services.AddExceptionHandler<ExceptionHandler>();
+builder.Services.AddExceptionHandling();
 
 builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddIdentity<User, IdentityRole<string>>(opt =>
-{
-    opt.Password.RequiredLength = 8;
-    opt.User.RequireUniqueEmail = true;
-    opt.Password.RequireNonAlphanumeric = false;
-    opt.SignIn.RequireConfirmedEmail = true;
-})
-.AddEntityFrameworkStores<ProjectDbContext>();
 
 builder.Services.AddJwtAuth(builder.Configuration);
 
