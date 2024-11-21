@@ -12,4 +12,22 @@ public sealed class TaskHistory
     [StringLength(1000)]
     public string PayloadJson { get; set; }
     public DateTime Timestamp { get; set; }
+    
+    public static TaskHistory Create(int taskId, string payloadClassName, string payloadJson, DateTime timestamp)
+    {
+        return new TaskHistory
+        {
+            TaskId = taskId,
+            PayloadClassName = payloadClassName,
+            PayloadJson = payloadJson,
+            Timestamp = timestamp
+        };
+    }
+
+    public void LogChange(string className, string jsonPayload)
+    {
+        PayloadClassName = className;
+        PayloadJson = jsonPayload;
+        Timestamp = DateTime.UtcNow;
+    }
 }

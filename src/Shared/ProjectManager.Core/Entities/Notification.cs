@@ -15,4 +15,23 @@ public sealed class Notification
     public Task Task { get; set; }
     public string UserId { get; set; }
     public User User { get; set; }
+    
+    private Notification() { }
+
+    public static Notification Create(int id, string messageType, string message, int taskId, string userId)
+    {
+        return new Notification
+        {
+            Id = id,
+            MessageType = messageType,
+            Message = message,
+            CreatedAt = DateTime.UtcNow,
+            IsRead = false,
+            TaskId = taskId,
+            UserId = userId
+        };
+    }
+
+    public void MarkAsRead() => IsRead = true;
+    public void MarkAsUnread() => IsRead = false;
 }

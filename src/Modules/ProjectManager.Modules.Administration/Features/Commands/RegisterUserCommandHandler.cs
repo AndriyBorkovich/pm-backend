@@ -13,14 +13,7 @@ public sealed class RegisterUserCommandHandler(UserManager<User> userManager) : 
     public async Task<Result<RegistrationResponse>> Handle(RegisterUserRequest request, CancellationToken cancellationToken)
     {
         var userName = $"{request.FirstName}{request.LastName}";
-        var user = new User
-        {
-            Email = request.Email,
-            NormalizedEmail = request.Email.ToUpper(),
-            UserName = userName,
-            NormalizedUserName = userName.ToUpper(),
-            SendNotificationType = NotificationType.Push
-        };
+        var user = User.Create(request.Email, userName, NotificationType.Push);
 
         var result = await userManager.CreateAsync(user, request.Password);
 
